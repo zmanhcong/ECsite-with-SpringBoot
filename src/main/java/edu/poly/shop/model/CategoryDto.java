@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto implements Serializable {
-    private int categoryId;
+    private Long categoryId;
     @NotEmpty
     @Min(value = 5)
     private String name;
