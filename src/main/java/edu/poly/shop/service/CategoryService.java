@@ -15,6 +15,8 @@ import java.util.function.Function;
 public interface CategoryService  {
     List<Category> findByNameContaining(String name);
 
+    Page<Category> findByNameContaining(String name, Pageable pageable);
+
     List<Category> findAll();
 
     List<Category> findAll(Sort sort);
