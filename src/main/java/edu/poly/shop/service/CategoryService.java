@@ -13,6 +13,8 @@ import java.util.function.Function;
 
 
 public interface CategoryService  {
+    List<Category> findByNameContaining(String name);
+
     List<Category> findAll();
 
     List<Category> findAll(Sort sort);
