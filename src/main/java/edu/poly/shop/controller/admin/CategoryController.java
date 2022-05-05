@@ -33,7 +33,6 @@ public class CategoryController {
     @GetMapping("add")
     public String add(Model model){
         model.addAttribute("category", new CategoryDto());
-        System.out.println("add ok");
         return "admin/categories/addOrEdit";
     }
 
@@ -48,7 +47,6 @@ public class CategoryController {
             dto.setIsEdit(true); //thêm cái này để biết là đang là add hay edit, để mà ẩn hiện button ở views html
 
             model.addAttribute("category", dto);
-            System.out.println("edit/categoryId: ok");
             return new ModelAndView("admin/categories/addOrEdit", model);
         }
 
@@ -76,7 +74,6 @@ public class CategoryController {
         BeanUtils.copyProperties(dto, entity);
         categoryService.save(entity);
         model.addAttribute("message", "Category is saved!!(message from controller)");
-        System.out.println("saveOrUpdate ok");
         return new ModelAndView("forward:/admin/categories", model);
     }
 
