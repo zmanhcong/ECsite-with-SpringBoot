@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -33,6 +34,14 @@ public class Product implements Serializable {
     private Date enteredDate;
     @Column(nullable = false)
     private short status;
-    @Column(nullable = false)
-    private int categoryId;
+
+//    @Column(nullable = false)
+//    private int categoryId;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<OrderDetail> orderDetails;
 }
