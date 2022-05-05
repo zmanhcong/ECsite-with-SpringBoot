@@ -17,7 +17,7 @@ import java.util.Set;
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    private Long productId;
     @Column(columnDefinition = "nvarchar(100) not null")
     private String name;
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Product implements Serializable {
     private short status;
 
 //    @Column(nullable = false)
-//    private int categoryId;
+//    private int productId;
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
