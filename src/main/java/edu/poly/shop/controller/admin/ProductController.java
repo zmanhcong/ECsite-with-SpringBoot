@@ -1,10 +1,12 @@
 package edu.poly.shop.controller.admin;
 
 import edu.poly.shop.domain.Category;
+import edu.poly.shop.domain.Product;
 import edu.poly.shop.model.CategoryDto;
 import edu.poly.shop.model.ProductDto;
 import edu.poly.shop.service.CategoryService;
 import edu.poly.shop.service.ProductService;
+import edu.poly.shop.service.StorageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,10 +34,10 @@ import java.util.stream.IntStream;
 public class ProductController {
     @Autowired
     CategoryService categoryService;
-
     @Autowired
     ProductService productService;
-
+    @Autowired
+    StorageService storageService;
     @ModelAttribute("categories")
     public List<CategoryDto> getCategories(){
         return categoryService.findAll().stream().map(item->{  //chuyển thành stream, rồi chuyển thành map để map mỗi phần tử nhận được thành CategoryDto
@@ -78,16 +81,29 @@ public class ProductController {
 
     @PostMapping("saveOrUpdate")
     public ModelAndView saveOrUpdate(ModelMap model,
-             @Valid @ModelAttribute("category") CategoryDto dto, BindingResult result){  //validate cho category
+             @Valid @ModelAttribute("product") ProductDto dto, BindingResult result){  //@Valid,BindingResult for validate category
 
         if(result.hasErrors()){
             return new ModelAndView("admin/products/addOrEdit");
         }
 
-        Category entity = new Category();
-        BeanUtils.copyProperties(dto, entity);
-        categoryService.save(entity);
-        model.addAttribute("message", "Category is saved!!(message from controller)");
+        Product entity = new Product();
+        BeanUtils.copyProperties(dto, entity);     //save to database. entity is created by Product()
+
+        Category category = new Category();
+        category.setCategoryId(dto.getCategoryId());
+        entity.setCategory(category);
+
+        if (!dto.getImageFile().isEmpty()){
+            UUID uuid = UUID.randomUUID();    //UUID cho nhận dạng ký tự
+            String uuString = uuid.toString();
+
+            entity.setImage(storageService.getStorageFilename(dto.getImageFile(), uuString));
+            storageService.store(dto.getImageFile(), entity.getImage());
+        }
+
+        productService.save(entity);
+        model.addAttribute("message", "Product is saved!!");
         return new ModelAndView("forward:/admin/products", model);
     }
 
