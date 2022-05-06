@@ -35,6 +35,15 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @ModelAttribute("categories")
+    public List<CategoryDto> getCategories(){
+        return categoryService.findAll().stream().map(item->{  //chuyển thành stream, rồi chuyển thành map để map mỗi phần tử nhận được thành CategoryDto
+            CategoryDto dto = new CategoryDto();
+            BeanUtils.copyProperties(item, dto);
+            return dto;
+        }).toList();
+    }
+
     @GetMapping("add")
     public String add(Model model){
         model.addAttribute("product", new ProductDto());
