@@ -59,6 +59,42 @@ public class ProductController {
         return "admin/products/addOrEdit";
     }
 
+    @GetMapping("images/{filename:.+}") //for display images in addOrEdit.html
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename){
+        Resource file = storageService.loadAsResource(filename);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+    @PostMapping("saveOrUpdate")
+    public ModelAndView saveOrUpdate(ModelMap model,
+                                     @Valid @ModelAttribute("product") ProductDto dto, BindingResult result){  //@Valid,BindingResult for validate category
+
+        if(result.hasErrors()){
+            return new ModelAndView("admin/products/addOrEdit");
+        }
+
+        Product entity = new Product();
+        BeanUtils.copyProperties(dto, entity);     //save to database. entity is created by Product()
+
+        Category category = new Category();         // set category for product
+        category.setCategoryId(dto.getCategoryId());
+        entity.setCategory(category);
+
+        if (!dto.getImageFile().isEmpty()){         //function for show imgmes
+            UUID uuid = UUID.randomUUID();    //UUID cho nhận dạng ký tự
+            String uuString = uuid.toString();
+
+            entity.setImage(storageService.getStorageFilename(dto.getImageFile(), uuString));
+            storageService.store(dto.getImageFile(), entity.getImage());
+        }
+
+        productService.save(entity);
+        model.addAttribute("message", "Product is saved!!");
+        return new ModelAndView("forward:/admin/products", model);
+    }
+
     @GetMapping("edit/{productId}")
     public ModelAndView edit(ModelMap model, @PathVariable("productId") Long productId) {
         Optional<Product> opt = productService.findById(productId);
@@ -75,15 +111,6 @@ public class ProductController {
 
         model.addAttribute("message", "Product is not exited");
         return new ModelAndView("forward:/admin/products", model);
-    }
-
-    @GetMapping("images/{filename:.+}") //for display images in addOrEdit.html
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename){
-        Resource file = storageService.loadAsResource(filename);
-
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @GetMapping("delete/{productId}")
@@ -105,33 +132,7 @@ public class ProductController {
         return new ModelAndView("forward:/admin/products/search", model);
     }
 
-    @PostMapping("saveOrUpdate")
-    public ModelAndView saveOrUpdate(ModelMap model,
-             @Valid @ModelAttribute("product") ProductDto dto, BindingResult result){  //@Valid,BindingResult for validate category
 
-        if(result.hasErrors()){
-            return new ModelAndView("admin/products/addOrEdit");
-        }
-
-        Product entity = new Product();
-        BeanUtils.copyProperties(dto, entity);     //save to database. entity is created by Product()
-
-        Category category = new Category();
-        category.setCategoryId(dto.getCategoryId());
-        entity.setCategory(category);
-
-        if (!dto.getImageFile().isEmpty()){
-            UUID uuid = UUID.randomUUID();    //UUID cho nhận dạng ký tự
-            String uuString = uuid.toString();
-
-            entity.setImage(storageService.getStorageFilename(dto.getImageFile(), uuString));
-            storageService.store(dto.getImageFile(), entity.getImage());
-        }
-
-        productService.save(entity);
-        model.addAttribute("message", "Product is saved!!");
-        return new ModelAndView("forward:/admin/products", model);
-    }
 
     @RequestMapping("")
     public String list(ModelMap model){

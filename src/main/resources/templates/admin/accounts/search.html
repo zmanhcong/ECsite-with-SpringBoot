@@ -10,7 +10,7 @@
     <div class="col offset-0 m t-4">
         <div class="card">
             <div class="card-header">
-                List of Products
+                List of Account
             </div>
             <div class="card-body">
                 <div th:if="${message != null}" class="alert alert-primary" role="alert">
@@ -47,9 +47,9 @@
                         <td th:text="${account.username}">Hat</td>
                         <td th:text="${account.password}">Hat</td>
                         <td>
-                            <a th:href="@{'/admin/products/view/' + ${account.username}}" class="btn btn-outline-info"><i class="fas fa-info"></i></a>
-                            <a th:href="@{'/admin/products/edit/' + ${account.username}}" class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
-                            <a th:href="@{'/admin/products/delete/' + ${account.username}}" class="btn btn-outline-danger"><i class="fas fa-recycle"></i></a>
+                            <a th:href="@{'/admin/accounts/view/' + ${account.userId}}" class="btn btn-outline-info"><i class="fas fa-info"></i></a>
+                            <a th:href="@{'/admin/accounts/edit/' + ${account.userId}}" class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
+                            <a th:href="@{'/admin/accounts/delete/' + ${account.userId}}" class="btn btn-outline-danger"><i class="fas fa-recycle"></i></a>
 <!--                            <a th:data-id="${account.productId}"-->
 <!--                               th:data-name="${account.name}"-->
 <!--                               onclick="ShowConfirmModalDialog(this.getAttribute('data-id'), this.getAttribute('data-name'))"-->

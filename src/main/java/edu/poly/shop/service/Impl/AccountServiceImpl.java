@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +27,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public <S extends Account> S save(S entity) {
+        Optional<Account> optExist = findById(entity.getUserId());
+        if (optExist.isPresent()){
+            if (StringUtils.isEmpty(entity.getPassword())){
+                entity.setPassword(optExist.get().getPassword());
+            }else {
+                entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
+            }
+        }
         entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
         return accountRepository.save(entity);
     }
-
 
     @Override
     public List<Account> findByUsernameContaining(String username) {
@@ -47,8 +55,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> findAllById(Iterable<String> strings) {
-        return accountRepository.findAllById(strings);
+    public List<Account> findAllById(Iterable<Long> longs) {
+        return accountRepository.findAllById(longs);
     }
 
     @Override
@@ -83,8 +91,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<String> strings) {
-        accountRepository.deleteAllByIdInBatch(strings);
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {
+        accountRepository.deleteAllByIdInBatch(longs);
     }
 
     @Override
@@ -94,13 +102,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Deprecated
-    public Account getOne(String s) {
-        return accountRepository.getOne(s);
+    public Account getOne(Long aLong) {
+        return accountRepository.getOne(aLong);
     }
 
     @Override
-    public Account getById(String s) {
-        return accountRepository.getById(s);
+    public Account getById(Long aLong) {
+        return accountRepository.getById(aLong);
     }
 
     @Override
@@ -118,16 +126,14 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll(pageable);
     }
 
-
-
     @Override
-    public Optional<Account> findById(String s) {
-        return accountRepository.findById(s);
+    public Optional<Account> findById(Long aLong) {
+        return accountRepository.findById(aLong);
     }
 
     @Override
-    public boolean existsById(String s) {
-        return accountRepository.existsById(s);
+    public boolean existsById(Long aLong) {
+        return accountRepository.existsById(aLong);
     }
 
     @Override
@@ -136,8 +142,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteById(String s) {
-        accountRepository.deleteById(s);
+    public void deleteById(Long aLong) {
+        accountRepository.deleteById(aLong);
     }
 
     @Override
@@ -146,8 +152,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends String> strings) {
-        accountRepository.deleteAllById(strings);
+    public void deleteAllById(Iterable<? extends Long> longs) {
+        accountRepository.deleteAllById(longs);
     }
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("admin/accounts")
@@ -68,35 +69,33 @@ public class AccountController {
         model.addAttribute("accounts", list);
         return "/admin/accounts/search";
     }
-//
-//    @GetMapping("edit/{accountId}")
-//    public ModelAndView edit(ModelMap model, @PathVariable("accountId") Long accountId) {
-//        Optional<account> opt = accountService.findById(accountId);
-//        AccountDto dto = new AccountDto();
-//
-//        if (opt.isPresent()) {
-//            account entity = opt.get();
-//            BeanUtils.copyProperties(entity, dto);
-//            dto.setIsEdit(true); //thêm cái này để biết là đang là add hay edit, để mà ẩn hiện button ở views html
-//
-//            model.addAttribute("account", dto);
-//            return new ModelAndView("admin/accounts/addOrEdit", model);
-//        }
-//
-//        model.addAttribute("message", "account is not exited");
-//        return new ModelAndView("forward:/admin/accounts", model);
-//    }
-//
-//    @GetMapping("delete/{accountId}")
-//    public ModelAndView delete(ModelMap model,
-//            @PathVariable("accountId") Long accountId){
-//            accountService.deleteById(accountId);
-//            model.addAttribute("message", "account is deleted!");
-//        return  new ModelAndView("forward:/admin/accounts/search", model);
-//    }
-//
 
+    @GetMapping("edit/{userId}")
+    public ModelAndView edit(ModelMap model, @PathVariable("userId") Long userId) {
+        Optional<Account> opt = accountService.findById(userId);
+        AccountDto dto = new AccountDto();
 
+        if (opt.isPresent()) {     //get acount. nếu acount đã tồn tại, nghĩa là edit acount thì mã hóa password, nếu acount chưa tồn tại ( tạo mới thì cũng mã hóa password)
+            Account entity = opt.get();
+            BeanUtils.copyProperties(entity, dto);
+            dto.setIsEdit(true);                         //thêm cái này để biết là đang là add hay edit, để mà ẩn hiện button ở views html
+
+            dto.setPassword("");                          // Dont show password
+            model.addAttribute("account", dto);
+            return new ModelAndView("admin/accounts/addOrEdit", model);
+        }else {
+            model.addAttribute("message", "account is not exited");
+        }
+        return new ModelAndView("forward:/admin/accounts", model);
+    }
+
+    @GetMapping("delete/{userId}")
+    public ModelAndView delete(ModelMap model,
+            @PathVariable("userId") Long userId){
+            accountService.deleteById(userId);
+            model.addAttribute("message", "account is deleted!");
+        return  new ModelAndView("forward:/admin/accounts/search", model);
+    }
 
 //
 //    @GetMapping("searchpaginated")

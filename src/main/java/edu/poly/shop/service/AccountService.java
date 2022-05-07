@@ -1,6 +1,7 @@
 package edu.poly.shop.service;
 
 import edu.poly.shop.domain.Account;
+import edu.poly.shop.domain.Category;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public interface AccountService {
 
     List<Account> findAll(Sort sort);
 
-    List<Account> findAllById(Iterable<String> strings);
+    List<Account> findAllById(Iterable<Long> longs);
 
     <S extends Account> List<S> saveAll(Iterable<S> entities);
 
@@ -35,14 +36,14 @@ public interface AccountService {
 
     void deleteAllInBatch(Iterable<Account> entities);
 
-    void deleteAllByIdInBatch(Iterable<String> strings);
+    void deleteAllByIdInBatch(Iterable<Long> longs);
 
     void deleteAllInBatch();
 
     @Deprecated
-    Account getOne(String s);
+    Account getOne(Long aLong);
 
-    Account getById(String s);
+    Account getById(Long aLong);
 
     <S extends Account> List<S> findAll(Example<S> example);
 
@@ -52,17 +53,17 @@ public interface AccountService {
 
     <S extends Account> S save(S entity);
 
-    Optional<Account> findById(String s);
+    Optional<Account> findById(Long aLong);
 
-    boolean existsById(String s);
+    boolean existsById(Long aLong);
 
     long count();
 
-    void deleteById(String s);
+    void deleteById(Long aLong);
 
     void delete(Account entity);
 
-    void deleteAllById(Iterable<? extends String> strings);
+    void deleteAllById(Iterable<? extends Long> longs);
 
     void deleteAll(Iterable<? extends Account> entities);
 
