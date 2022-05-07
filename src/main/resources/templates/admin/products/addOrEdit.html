@@ -12,12 +12,13 @@
                 th:object="${product}">                                                <!--enctype="multipart/form-data: for upload file-->
                 <div class="card">
                     <div class="card-header">
-                        Add New Product
+                        <h2 th:text="${product.isEdit ? 'Edit Product': 'Add New Product'}">Add New Product</h2>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-7">
-                                <div class="form-group">
+                                <input type="hidden" th:field="*{isEdit}">
+                                <div class="form-group" th:if="${product.isEdit}">
                                     <label for="productId">Product ID</label>
                                     <input type="text" class="form-control" name="productId" id="productId"
                                            th:field="*{productId}"
@@ -71,7 +72,9 @@
                                 }
                             </script>
                             <div class="col-5">
-                                <img id="image" src="images/no-image.png" width="90%" class="img-fluid rounded-top" alt="">
+                                <img id="image"
+                                     th:src="${product.image != null? '/admin/products/images/' + product.image : 'images/no-image.png' }"
+                                     src="images/no-image.png" width="90%" class="img-fluid rounded-top" alt="">
                                 <div class="form-group">
                                     <label for="productImage">Image File</label>
                                     <input type="file" onchange="chooseFile(this)" class="form-control-file" name="imageFile" id="productImage"
@@ -113,9 +116,10 @@
                 <div class="card-footer text-muted">
                     <div class="form-group">
 
-                        <button class="btn btn-success">New</button>
-                        <button class="btn btn-primary">Save</button>
-                        <a class="btn btn-danger float-right">Delete</a>
+                        <a th:href="@{/admin/products/add}" class="btn btn-success">New</a>
+                        <button class="btn btn-primary"
+                            th:if="${product.isEdit? 'Update':'Save'}">Save</button>    <!--Nếu là edit thì hiển thị button edit, nếu là new thì button là ADD-->
+                        <a th:if="${product.isEdit}"  th:href="@{'/admin/products/delete/' + ${product.productId}}" class="btn btn-danger float-right">Delete</a>
 
 
                     </div>

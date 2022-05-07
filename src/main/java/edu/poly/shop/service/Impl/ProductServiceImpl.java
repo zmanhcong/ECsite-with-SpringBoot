@@ -1,5 +1,6 @@
 package edu.poly.shop.service.Impl;
 
+import edu.poly.shop.domain.Category;
 import edu.poly.shop.domain.Product;
 import edu.poly.shop.repository.ProductRepository;
 import edu.poly.shop.service.ProductService;
@@ -19,6 +20,11 @@ import java.util.function.Function;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Override
+    public List<Product> findByNameContaining(String name) {
+        return productRepository.findByNameContaining(name);
+    }
 
     @Override
     public List<Product> findAll() {

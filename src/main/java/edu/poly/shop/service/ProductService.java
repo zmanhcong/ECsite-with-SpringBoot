@@ -1,5 +1,6 @@
 package edu.poly.shop.service;
 
+import edu.poly.shop.domain.Category;
 import edu.poly.shop.domain.Product;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public interface ProductService {
+    List<Product> findByNameContaining(String name);
+
     List<Product> findAll();
 
     List<Product> findAll(Sort sort);

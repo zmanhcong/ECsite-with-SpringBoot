@@ -9,10 +9,13 @@ import edu.poly.shop.service.ProductService;
 import edu.poly.shop.service.StorageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,34 +53,56 @@ public class ProductController {
 
     @GetMapping("add")
     public String add(Model model){
-        model.addAttribute("product", new ProductDto());
+        ProductDto dto = new ProductDto();
+        dto.setIsEdit(false);
+        model.addAttribute("product",dto );
         return "admin/products/addOrEdit";
     }
 
     @GetMapping("edit/{productId}")
     public ModelAndView edit(ModelMap model, @PathVariable("productId") Long productId) {
-        Optional<Category> opt = categoryService.findById(productId);
-        CategoryDto dto = new CategoryDto();
+        Optional<Product> opt = productService.findById(productId);
+        ProductDto dto = new ProductDto();
 
         if (opt.isPresent()) {
-            Category entity = opt.get();
+            Product entity = opt.get();
             BeanUtils.copyProperties(entity, dto);
             dto.setIsEdit(true); //thêm cái này để biết là đang là add hay edit, để mà ẩn hiện button ở views html
 
-            model.addAttribute("category", dto);
+            model.addAttribute("product", dto);
             return new ModelAndView("admin/products/addOrEdit", model);
         }
 
-        model.addAttribute("message", "Category is not exited");
+        model.addAttribute("message", "Product is not exited");
         return new ModelAndView("forward:/admin/products", model);
+    }
+
+    @GetMapping("images/{filename:.+}") //for display images in addOrEdit.html
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename){
+        Resource file = storageService.loadAsResource(filename);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @GetMapping("delete/{productId}")
     public ModelAndView delete(ModelMap model,
-            @PathVariable("productId") Long productId){
-            categoryService.deleteById(productId);
-            model.addAttribute("message", "Category is deleted!");
-        return  new ModelAndView("forward:/admin/products/search", model);
+            @PathVariable("productId") Long productId)
+            throws IOException {
+
+            Optional<Product> opt = productService.findById(productId);
+            if (opt.isPresent()){
+                if (!StringUtils.isEmpty(opt.get().getImage())){
+                    storageService.delete(opt.get().getImage());
+                }
+                productService.delete(opt.get());
+                model.addAttribute("message", "Product is deleted!");
+            }else {
+                model.addAttribute("message", "Product is not found!");
+            }
+
+        return new ModelAndView("forward:/admin/products/search", model);
     }
 
     @PostMapping("saveOrUpdate")
@@ -109,21 +135,21 @@ public class ProductController {
 
     @RequestMapping("")
     public String list(ModelMap model){
-        List<Category> list = categoryService.findAll();
+        List<Product> list = productService.findAll();
         model.addAttribute("products", list);
-        return "/admin/products/list";
+        return "/admin/products/search";
     }
     @GetMapping("search")
     public String search(ModelMap model,
            @RequestParam(name = "name", required = false) String name){
 
-        List<Category> list = null;
+        List<Product> list = null;
 
         if (StringUtils.hasText(name)){
-            list = categoryService.findByNameContaining(name);
+            list = productService.findByNameContaining(name);
         }
         else {
-            list = categoryService.findAll();
+            list = productService.findAll();
         }
         model.addAttribute("products", list);
         return "/admin/products/search";

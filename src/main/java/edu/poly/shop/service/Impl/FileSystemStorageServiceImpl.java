@@ -51,7 +51,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Resource loadAsResource(String filename){
+    public Resource loadAsResource(String filename){  //for display images
         try {
             Path file = load(filename);
             org.springframework.core.io.Resource resource = new UrlResource(file.toUri());
