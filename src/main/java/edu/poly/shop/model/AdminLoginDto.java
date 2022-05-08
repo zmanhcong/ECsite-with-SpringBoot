@@ -3,7 +3,6 @@ package edu.poly.shop.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -11,12 +10,12 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class AccountDto{
+public class AdminLoginDto {
     private Long userId;
     @NotEmpty
     private String username;
     @NotEmpty
     private String password;
 
-    private Boolean isEdit = false;    // edit or add
+    private Boolean rememberMe = false;
 }

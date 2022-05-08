@@ -51,9 +51,13 @@ public interface AccountService {
 
     Page<Account> findAll(Pageable pageable);
 
+    Account login(String username, String password);
+
     <S extends Account> S save(S entity);
 
     Optional<Account> findById(Long aLong);
+
+    Optional<Account> findByUsername(String username);
 
     boolean existsById(Long aLong);
 

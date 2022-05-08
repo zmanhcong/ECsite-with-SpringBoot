@@ -26,6 +26,16 @@ public class AccountServiceImpl implements AccountService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    public Account login(String username, String password){
+        Optional<Account> optExist = findByUsername(username);
+
+        if (optExist.isPresent() && bCryptPasswordEncoder.matches(password, optExist.get().getPassword())){
+            optExist.get().setPassword(""); //Chỉ cần so sánh chứ không gần return password nên set bằng rỗng
+            return optExist.get();
+        }
+        return null; //nếu không thì return null để báo là pass không đúng.
+    }
+    @Override
     public <S extends Account> S save(S entity) {
         Optional<Account> optExist = findById(entity.getUserId());
         if (optExist.isPresent()){
@@ -129,6 +139,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Optional<Account> findById(Long aLong) {
         return accountRepository.findById(aLong);
+    }
+
+    @Override
+    public Optional<Account> findByUsername(String username) {
+        return accountRepository.findByUsername(username);
     }
 
     @Override

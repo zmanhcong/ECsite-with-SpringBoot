@@ -14,8 +14,8 @@
                         <h2 th:text="${account.isEdit ? 'Edit Account': 'Add New Account'}">Add New Account</h2>
                     </div>
                     <div class="card-body">
-                        <input type="hidden" th:field="*{isEdit}">
-                        <div class="form-group" th:if="${account.isEdit}">
+                        <input type="hidden">    <!-- th:field="*{isEdit}"-->
+                        <div class="form-group" >   <!--th:if="${account.isEdit}"-->
                             <div class="form-group">
                                 <label for="productId">User ID</label>
                                 <input type="text" class="form-control" name="productId" id="productId"
