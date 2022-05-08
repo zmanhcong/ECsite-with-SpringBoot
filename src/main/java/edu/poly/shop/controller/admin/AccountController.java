@@ -41,6 +41,7 @@ public class AccountController {
         }
 
         Account entity = new Account();
+        dto.setUserId(2L);
         BeanUtils.copyProperties(dto, entity);
         accountService.save(entity);
         model.addAttribute("message", "account is saved!!");
