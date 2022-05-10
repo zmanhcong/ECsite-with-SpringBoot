@@ -46,7 +46,6 @@ public class AdminLoginController {
         //Kiểm tra trạng thái login(bằng cách get thông tin từ sesstion được thiết lập trong cofig/adminauthen). nếu đã login thì cho vào  ,chưa login thì redirect đến trang login
 
         session.setAttribute("username", account.getUsername());
-
         Object ruri = session.getAttribute("redirect-uri");
         if (ruri != null){
             session.removeAttribute("redirect-uri");

@@ -58,8 +58,8 @@
                                     <label for="categoryId">Category</label>
                                     <select class="form-control" name="categoryId" id="categoryId"
                                             th:field="*{categoryId}">
-                                        <option th:each="item : ${categories}" th:value="${item.categoryId}"
-                                        th:text="${item.name}" th:selected="${item.categoryId == product.categoryId}">   <!--đưa cái ID no đó vào field categoryId trong table product.-->
+                                        <option th:each="item : ${categories}" th:value="${item.getCategoryId()}"
+                                        th:text="${item.getName()}" th:selected="${item.categoryId == product.categoryId}">   <!--đưa cái ID no đó vào field categoryId trong table product.-->
                                             Category Name</option>
                                     </select>
                                 </div>
@@ -121,13 +121,10 @@
 
                 <div class="card-footer text-muted">
                     <div class="form-group">
-
                         <a th:href="@{/admin/products/add}" class="btn btn-success">New</a>
                         <button class="btn btn-primary"
                             th:if="${product.isEdit? 'Update':'Save'}">Save</button>    <!--Nếu là edit thì hiển thị button edit, nếu là new thì button là ADD-->
                         <a th:if="${product.isEdit}"  th:href="@{'/admin/products/delete/' + ${product.productId}}" class="btn btn-danger float-right">Delete</a>
-
-
                     </div>
                 </div>
             </form>

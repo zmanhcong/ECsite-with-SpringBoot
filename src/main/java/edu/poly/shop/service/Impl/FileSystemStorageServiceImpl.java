@@ -23,7 +23,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
 
     @Override
     public String getStorageFilename(MultipartFile file, String id){
-        String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+        String ext = FilenameUtils.getExtension(file.getOriginalFilename()); //get out extension of images( like png, jpg, jpeg..)
         return "p" + id + "." + ext;
     }
 
@@ -37,13 +37,13 @@ public class FileSystemStorageServiceImpl implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file");
             }
-            Path destinationFile = this.rootLocation.resolve(Paths.get(storedFilename))
+            Path destinationFile = this.rootLocation.resolve(Paths.get(storedFilename))     //get path of image
                     .normalize().toAbsolutePath();
             if(!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())){
                 throw new StorageException("Cannot store file outside current directory");
             }
             try(InputStream inputStream = file.getInputStream()){
-                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);     //replace image if exist
             }
         } catch (Exception e) {
             throw new StorageException("Failed to store file", e);

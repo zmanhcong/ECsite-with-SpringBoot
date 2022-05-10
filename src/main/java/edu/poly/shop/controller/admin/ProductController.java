@@ -42,7 +42,7 @@ public class ProductController {
     ProductService productService;
     @Autowired
     StorageService storageService;
-    @ModelAttribute("categories")
+    @ModelAttribute("categories")   //use for share views with products/addOrUpdate.html
     public List<CategoryDto> getCategories(){
         return categoryService.findAll().stream().map(item->{  //chuyển thành stream, rồi chuyển thành map để map mỗi phần tử nhận được thành CategoryDto
             CategoryDto dto = new CategoryDto();
@@ -55,6 +55,7 @@ public class ProductController {
     public String add(Model model){
         ProductDto dto = new ProductDto();
         dto.setIsEdit(false);
+
         model.addAttribute("product",dto );
         return "admin/products/addOrEdit";
     }
@@ -105,6 +106,8 @@ public class ProductController {
             BeanUtils.copyProperties(entity, dto);
             dto.setIsEdit(true); //thêm cái này để biết là đang là add hay edit, để mà ẩn hiện button ở views html
 
+            List<Category> categories = categoryService.findAll();
+            model.addAttribute("categories", categories);
             model.addAttribute("product", dto);
             return new ModelAndView("admin/products/addOrEdit", model);
         }
