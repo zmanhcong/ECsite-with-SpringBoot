@@ -122,6 +122,54 @@
                     </nav>
                 </div>
             </div>
+
+
+            <!--Test tạo modal dialog cho việc tạo new data-->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addleModal">Add new student</button>
+            <!--Chu y: data-target="#addleModal -->
+            <div class="modal fade" id="addleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <form>
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Id:</label>
+                                    <input type="text" class="form-control" id="IdEdit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Name:</label>
+                                    <input type="text" class="form-control" id="NameEdit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Department:</label>
+                                    <input type="text" class="form-control" id="departmentEdit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Update by:</label>
+                                    <input type="text" class="form-control" id="UpdatebyEdit">
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Update On:</label>
+                                    <input type="text" class="form-control" id="UpdateOnEdit">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
         </div>
     </section>
 </body>

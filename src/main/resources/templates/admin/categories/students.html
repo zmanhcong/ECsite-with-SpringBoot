@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/dashboardLayout.html}" >
+
+<head>
+</head>
+<body>
+    <section class="row" layout:fragment="content">
+    <div class="col-6 offset-3 mt-4">
+        <h2>List of students</h2>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addleModal">Add new student</button>
+        <!--Chu y: data-target="#addleModal -->
+        <table class="table table-stripped">
+            <thead>
+            <tr>
+                <td>ID</td>
+                <td>Department</td>
+                <td>UPdated By</td>
+                <td>Updated On</td>
+            </tr>
+            </thead>
+            <tr th:each="student:${students}">
+                <td th:text="${student.Id}">ID</td>
+                <td th:text="${student.name}">Name</td>
+                <td th:text="${student.department}">Department</td>
+                <td th:text="${student.updateBy}">Updated by</td>
+                <td th:text="${student.updateOn}">Updated on</td>
+            </tr>
+        </table>
+        <div class="modal fade" id="addleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <form>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Id:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Department:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Updateby:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Update onc:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </section>
+    <footer class="row"></footer>
+</body>
+</html>
