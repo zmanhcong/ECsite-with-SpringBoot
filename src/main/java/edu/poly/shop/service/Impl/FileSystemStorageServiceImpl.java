@@ -22,31 +22,31 @@ public class FileSystemStorageServiceImpl implements StorageService {
     private final Path rootLocation;
 
     @Override
-    public String getStorageFilename(MultipartFile file, String id){
+    public String getStorageFilename(MultipartFile file, String id){   //file: là tên file gốc, ví dụ:anh-dep.png, output của function này sẽ đổi tên ảnh, để không bị trùng lặp
         String ext = FilenameUtils.getExtension(file.getOriginalFilename()); //get out extension of images( like png, jpg, jpeg..)
         return "p" + id + "." + ext;
     }
 
     public FileSystemStorageServiceImpl(StorageProperties properties){
-        this.rootLocation = Paths.get(properties.getLocation());
+        this.rootLocation = Paths.get(properties.getLocation());            //lấy thư mục dùng để lưu file. lấy ra từ appliction.properties.
     }
 
     @Override
-    public void store(MultipartFile file, String storedFilename) {
+    public void store(MultipartFile file, String storedFilename) { //lưu file, với tham số đầu là file lấy từ view, tham số thứ 2 là tên file(tên file đã được đặt random)
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file");
             }
-            Path destinationFile = this.rootLocation.resolve(Paths.get(storedFilename))     //get path of image
+            Path destinationFile = this.rootLocation.resolve(Paths.get(storedFilename))     //resolve: dùng để path dựa trên rootLocation. exg: root: c/nmcong.. -> resolve: c/nmcong/fileName
                     .normalize().toAbsolutePath();
-            if(!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())){
+            if(!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())){     //So sánh path lấy ở trên và path lấy ở application.properties. Nếu file lưu ở ngoài stored_location(ví dụ: c:/nmcong/images) thì sẽ hiển thị message là không đc lưu ở ngoài folder
                 throw new StorageException("Cannot store file outside current directory");
             }
             try(InputStream inputStream = file.getInputStream()){
-                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);     //replace image if exist
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);     //copy file và path lấy được ở trên, và replace image if exist
             }
         } catch (Exception e) {
-            throw new StorageException("Failed to store file", e);
+            throw new StorageException("Failed to store file", e);    //nếu mà không lưu được thì báo lỗi, có truyền thông tin của exception.
         }
     }
 
@@ -75,7 +75,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
         Files.delete(destinationFile);
     }
     @Override
-    public void init(){
+    public void init(){  //Hàm init này được init bằng @Bean ở function main.
         try{
             Files.createDirectories(rootLocation);
             System.out.println(rootLocation.toString());

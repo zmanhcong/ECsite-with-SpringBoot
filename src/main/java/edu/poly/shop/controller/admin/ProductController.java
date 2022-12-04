@@ -83,12 +83,13 @@ public class ProductController {
         category.setCategoryId(dto.getCategoryId());
         entity.setCategory(category);
 
-        if (!dto.getImageFile().isEmpty()){         //function for show imgmes
-            UUID uuid = UUID.randomUUID();    //UUID cho nhận dạng ký tự
+        //function for show imgmes, imageFile được gửi từ addOrEdit.html thông qua POST:  multipart/form-data
+        if (!dto.getImageFile().isEmpty()){
+            UUID uuid = UUID.randomUUID();    //UUID random string, chống duplicate image
             String uuString = uuid.toString();
 
-            entity.setImage(storageService.getStorageFilename(dto.getImageFile(), uuString));
-            storageService.store(dto.getImageFile(), entity.getImage());
+            entity.setImage(storageService.getStorageFilename(dto.getImageFile(), uuString));   //set tên image file bằng random từ UUID, rồi lưu vào database
+            storageService.store(dto.getImageFile(), entity.getImage());     //lưu file, với tham số đầu là file lấy từ view, tham số thứ 2 là tên file(tên file đã được đặt random)
         }
 
         productService.save(entity);

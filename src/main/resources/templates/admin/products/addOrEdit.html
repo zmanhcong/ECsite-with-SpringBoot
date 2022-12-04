@@ -64,14 +64,14 @@
                                     </select>
                                 </div>
                             </div>
-
+                            <!--Sử dụng js để khi chọn hình thì hiển thị image prevew lên. nếu không có đoạn này thì không có image preview-->
                             <script>
                                 function chooseFile(fileInput){
                                     if (fileInput.files && fileInput.files[0]){
                                         var reader = new FileReader();
 
                                         reader.onload = function(e){
-                                            $('#image').attr('src', e.target.result);
+                                            $('#image').attr('src', e.target.result);   /* lấy id là image, attribute là src -> xong rồi load ảnh vào đây để hiển thị.(nếu không có đoạn này thì không preview được ảnh */
                                         }
                                         reader.readAsDataURL(fileInput.files[0]);
                                     }
