@@ -41,14 +41,15 @@ public class AccountController {
         }
 
         Account entity = new Account();
-        dto.setUserId(2L);
+//        dto.setUserId(2L);
+        dto.setUserId(accountService.getMaxUserId()+1);
         BeanUtils.copyProperties(dto, entity);
         accountService.save(entity);
         model.addAttribute("message", "account is saved!!");
         return new ModelAndView("forward:/admin/accounts", model);
     }
 
-        @RequestMapping("")
+    @RequestMapping("")
     public String list(ModelMap model){
         List<Account> list = accountService.findAll();
         model.addAttribute("accounts", list);

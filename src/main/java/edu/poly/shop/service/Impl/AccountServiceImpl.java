@@ -33,7 +33,10 @@ public class AccountServiceImpl implements AccountService {
             optExist.get().setPassword(""); //Chỉ cần so sánh chứ không gần return password nên set bằng rỗng
             return optExist.get();
         }
-        return null; //nếu không thì return null để báo là pass không đúng.
+        else {
+            return null; //nếu không thì return null để báo là pass không đúng.
+        }
+
     }
     @Override
     public <S extends Account> S save(S entity) {
@@ -47,6 +50,13 @@ public class AccountServiceImpl implements AccountService {
         }
         entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
         return accountRepository.save(entity);
+    }
+
+    //Find max userID for plus +1 numer of userID in AccountController.
+    @Override
+    public Long getMaxUserId() {
+        Long maxUserId =  accountRepository.getMaxUserId();
+        return maxUserId != null ? maxUserId : 0L;   //if maxUserId not null, return maxUserId, else maxUserId = null, return 0. because if database hava no user yet!, maxUserId will is null.
     }
 
     @Override
@@ -205,4 +215,5 @@ public class AccountServiceImpl implements AccountService {
     public <S extends Account, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return accountRepository.findBy(example, queryFunction);
     }
+
 }

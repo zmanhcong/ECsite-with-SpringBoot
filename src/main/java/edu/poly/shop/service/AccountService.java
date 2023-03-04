@@ -82,4 +82,6 @@ public interface AccountService {
     <S extends Account> boolean exists(Example<S> example);
 
     <S extends Account, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction);
+
+    Long getMaxUserId();
 }
