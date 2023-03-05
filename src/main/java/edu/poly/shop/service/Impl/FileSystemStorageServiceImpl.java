@@ -58,9 +58,9 @@ public class FileSystemStorageServiceImpl implements StorageService {
             if(resource.exists() || resource.isReadable()){
                 return resource;
             }
-            throw new StorageFileNotFoundException("Could not read file: " + filename);
+            throw new StorageFileNotFoundException("Could not read file: " +filename);
         }catch (Exception e) {
-            throw new StorageFileNotFoundException("Could not read file " +filename);
+            throw new StorageFileNotFoundException("Could not read file: " +filename);
         }
     }
     @Override

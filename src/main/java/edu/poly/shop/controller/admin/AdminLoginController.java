@@ -37,21 +37,25 @@ public class AdminLoginController {
             return new ModelAndView("/admin/accounts/login",model);
         }
 
-        Account account = accountService.login(dto.getUsername(), dto.getPassword());
+            Account account = accountService.login(dto.getUsername(), dto.getPassword());
         if (account == null){
             model.addAttribute("message", "Invalid username or password");
             return new ModelAndView("/admin/accounts/login", model);
         }
 
-        //Kiểm tra trạng thái login(bằng cách get thông tin từ sesstion được thiết lập trong cofig/adminauthen). nếu đã login thì cho vào  ,chưa login thì redirect đến trang login
-
+        // Set the 'username' attribute in the session object to the authenticated account's username
         session.setAttribute("username", account.getUsername());
+        // Get the 'redirect-uri' attribute from the session object
         Object ruri = session.getAttribute("redirect-uri");
-        if (ruri != null){
+        if (ruri != null) {
+            // Remove the old 'redirect-uri' attribute from the session object, and set new redirect-uri in interceptor.java
             session.removeAttribute("redirect-uri");
+
+            // Create a new ModelAndView object that redirects to the saved 'redirect-uri', this uri was saved in interceptor.java
             return new ModelAndView("redirect:" + ruri);
         }
 
+        // If the 'redirect-uri' attribute is null, create a new ModelAndView object that forwards to the '/admin/categories' page(that mean user access to aloginPage first.)
         return new ModelAndView("forward:/admin/categories", model);
     }
 }
