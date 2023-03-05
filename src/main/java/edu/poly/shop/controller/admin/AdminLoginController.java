@@ -56,6 +56,12 @@ public class AdminLoginController {
         }
 
         // If the 'redirect-uri' attribute is null, create a new ModelAndView object that forwards to the '/admin/categories' page(that mean user access to aloginPage first.)
-        return new ModelAndView("forward:/admin/categories", model);
+        return new ModelAndView("forward:/admin/products", model);
+    }
+
+    @GetMapping("/alogout")
+    public ModelAndView logout() {
+        session.invalidate();
+        return new ModelAndView("redirect:/alogin");
     }
 }

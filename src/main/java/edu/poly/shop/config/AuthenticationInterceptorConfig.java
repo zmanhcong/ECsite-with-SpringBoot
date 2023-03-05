@@ -14,6 +14,7 @@ public class AuthenticationInterceptorConfig implements WebMvcConfigurer{
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminAuthenticationInterceptor)
-                .addPathPatterns("/admin/**");  //Config, if access to /admin/** without login, redirect to login screen.
+                .addPathPatterns("/admin/**")    //Config, if access to /admin/** without login, redirect to login screen.
+                .excludePathPatterns("/admin/accounts/add");
     }
 }
