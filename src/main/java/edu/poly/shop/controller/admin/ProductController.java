@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -146,16 +147,15 @@ public class ProductController {
     }
     @GetMapping("search")
     public String search(ModelMap model,
-           @RequestParam(name = "name", required = false) String name){
+                         @RequestParam(name = "name", required = false) String name) {
+        List<Product> list = new ArrayList<>();
 
-        List<Product> list = null;
-
-        if (StringUtils.hasText(name)){
-            list = productService.findByNameContaining(name);
-        }
-        else {
+        if (StringUtils.hasText(name)) {
+            list = productService.findProductName_nativeQuery(name); //find product name by query in impl.java
+        } else {
             list = productService.findAll();
         }
+
         model.addAttribute("products", list);
         return "/admin/products/search";
     }

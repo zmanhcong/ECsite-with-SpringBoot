@@ -1,6 +1,5 @@
 package edu.poly.shop.service.Impl;
 
-import edu.poly.shop.domain.Category;
 import edu.poly.shop.domain.Product;
 import edu.poly.shop.repository.ProductRepository;
 import edu.poly.shop.service.ProductService;
@@ -9,21 +8,38 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);  //Logger for show log in console when search products
     @Autowired
     private ProductRepository productRepository;
 
     @Override
     public List<Product> findByNameContaining(String name) {
-        return productRepository.findByNameContaining(name);
+        logger.info("Entering findByNameContaining method with name: {}", name);   //Logger for show log in console when search products
+        List<Product> products = productRepository.findByNameContaining(name);
+        logger.info("Found {} products with name containing '{}'", products.size(), name);
+        return products;
+        //return productRepository.findByNameContaining(name);
+    }
+
+    @Override
+    @Query(value = "SELECT * FROM products p WHERE p.name LIKE %:keyword%", nativeQuery = true)
+    public List<Product> findProductName_nativeQuery(String keyword) {
+        logger.info("Entering findByNameContaining method with name: {}", keyword);
+        List<Product> products = productRepository.findProductName_nativeQuery(keyword);
+        logger.info("Found {} products with name containing '{}'", products.size(), keyword);
+        return  products;
     }
 
     @Override
@@ -177,4 +193,5 @@ public class ProductServiceImpl implements ProductService {
     public <S extends Product, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return productRepository.findBy(example, queryFunction);
     }
+
 }
