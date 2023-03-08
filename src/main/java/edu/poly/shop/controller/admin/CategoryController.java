@@ -81,7 +81,7 @@ public class CategoryController {
     public String list(ModelMap model){
         List<Category> list = categoryService.findAll();
         model.addAttribute("categories", list);
-        return "/admin/categories/list";
+        return "/admin/categories/search";
     }
     @GetMapping("search")
     public String search(ModelMap model,
@@ -90,7 +90,7 @@ public class CategoryController {
         List<Category> list = null;
 
         if (StringUtils.hasText(name)){
-            list = categoryService.findByNameContaining(name);
+            list = categoryService.findProductName_nativeQuery(name);
         }
         else {
             list = categoryService.findAll();

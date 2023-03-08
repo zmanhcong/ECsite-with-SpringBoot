@@ -5,8 +5,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,12 @@ public interface CategoryService extends CrudRepository<Category, Long> {
     List<Category> findByNameContaining(String name);
 
     Page<Category> findByNameContaining(String name, Pageable pageable);
+
+    @Query(value = "SELECT * FROM categories WHERE name LIKE %:keyword%", countQuery = "SELECT COUNT(*) FROM categories WHERE name LIKE %:keyword%", nativeQuery = true)
+    Page<Category> findByNameContaining1(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query(value = "SELECT * FROM categories WHERE name LIKE %:keyword%", nativeQuery = true)
+    List<Category> findProductName_nativeQuery(String keyword);
 
     List<Category> findAll();
 
